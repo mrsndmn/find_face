@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from base64 import b64encode
 from collections import OrderedDict
@@ -11,6 +12,7 @@ import json
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 UPLOAD_FOLDER = '/tmp/'
 ALLOWED_EXTENSIONS = set(['pnxg', 'jpg', 'jpeg', 'gif'])
