@@ -60,7 +60,10 @@ def test_sign():
 
 @app.route("/upload", methods=['POST'])
 def upload_file():
-    query_params = json.loads(request.headers["vkheaders"])
+    try:
+        query_params = json.loads(request.headers["vkheaders"]) #500 error todo try except
+    except:
+        return "Wrong headers", 400
     print(query_params)  # test
     status = is_valid(query=query_params, secret=client_secret)
     if not status:
