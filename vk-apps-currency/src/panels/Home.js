@@ -14,9 +14,9 @@ import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 const queryString = require('query-string');
 console.log("query", window.location.search);
 const parsed = queryString.parse(window.location.search);
-console.log("query", parsed);
+console.log("query", JSON.stringify(parsed));
 
-
+/*
 const http = require('http');
 http.get('http://localhost:10888/api', (resp) => {
   let data = parsed;
@@ -24,7 +24,7 @@ http.get('http://localhost:10888/api', (resp) => {
 }).on("error", (err) => {
   console.log("Error: " + err.message);
 });
-
+*/
 
 
 const Home = ({ id, go, fetchedUser }) => (
@@ -34,7 +34,7 @@ const Home = ({ id, go, fetchedUser }) => (
 		<Group title="User Data Fetched with VK Connect">
 			<Cell
 				before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
-				description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : '' && parsed}
+				description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : ''}
 			>
 				{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
 			</Cell>
@@ -49,12 +49,14 @@ const Home = ({ id, go, fetchedUser }) => (
 			</Div>
 		</Group>
 
-		<Group title="Upload form">
+		<Group title={"File uploader"}>
 			<Div>
-				<Button size="xl" level="2" onClick={go} data-to="upload">
+				<Button size="xl" level="2" onClick={go} data-to="down">
+					{console.log(parsed)}
 					Download file
 				</Button>
 			</Div>
+
 		</Group>
 
 

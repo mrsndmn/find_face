@@ -6,6 +6,20 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
+import Down from './panels/down'
+
+
+const queryString = require('query-string');
+console.log("query", window.location.search);
+const parsed = queryString.parse(window.location.search);
+console.log("query", parsed);
+
+/*
+const http = require('http');
+http.post('http://localhost:10888/test_sign', (resp) => {
+	let data = parsed;
+});
+*/
 
 const App = () => {
 
@@ -37,6 +51,7 @@ const App = () => {
 		<View activePanel={activePanel} popout={popout}>
 			<Home id='home' fetchedUser={fetchedUser} go={go} />
 			<Persik id='persik' go={go} />
+			<Down id = 'down' go = {go} />
 		</View>
 	);
 }
