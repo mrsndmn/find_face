@@ -10,11 +10,16 @@ from hmac import HMAC
 from urllib.parse import urlparse, parse_qsl, urlencode
 import json
 
+import queues.worker.photoloader
+from aiotasks import send_task
+from queues.worker.photoloader import manager
+
+import asyncio
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
-UPLOAD_FOLDER = '/tmp/'
+UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'JPEG', 'JPG'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16mb
@@ -24,7 +29,7 @@ vk_app_id=6736218&vk_is_app_user=1
 &vk_are_notifications_enabled=1&vk_language=ru&
 vk_access_token_settings=&vk_platform=android
 &sign=exTIBPYTrAKDTHLLm2AwJkmcVcvFCzQUNyoa6wAjvW6k"'''
-client_secret = "qmvVitWxyuk5dJBwt8PG"  # Защищённый ключ из настроек вашего приложения
+client_secret = os.environ['VKAPPS_SECRET_KEY']  # Защищённый ключ из настроек вашего приложения
 
 
 def is_valid(*, query: dict, secret: str) -> bool:
@@ -32,6 +37,7 @@ def is_valid(*, query: dict, secret: str) -> bool:
     vk_subset = OrderedDict(sorted(x for x in query.items() if x[0][:3] == "vk_"))
     hash_code = b64encode(HMAC(secret.encode(), urlencode(vk_subset, doseq=True).encode(), sha256).digest())
     decoded_hash_code = hash_code.decode('utf-8')[:-1].replace('+', '-').replace('/', '_')
+    print(query["sign"], "decoded_hash_code: ", decoded_hash_code)
     return query["sign"] == decoded_hash_code
 
 
@@ -77,15 +83,16 @@ def upload_file():
         filename = secure_filename(file.filename)
         if not savefile(file):
             return "Save error", 507
-    else: 
+    else:
         return "Filename error", 415
 
     try:
-        push_in_queue(id_, filename)
+        manager.loop.run_until_complete(
+                send_task("get_friends_deeply", args=(query_params["vk_user_id"],)))
     except:
         return "Push error", 520
 
-    return True, 200
+    return "", 200
 
 
 app.run()

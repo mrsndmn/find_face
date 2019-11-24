@@ -18,6 +18,7 @@ async def download_image_to_file(url, fname):
         async with session.get(url) as resp:
             if resp.status == 200:
                 fname = f"photos/{fname}"
+                print(f"fname {fname}")
                 f = await aiofiles.open(fname, mode='wb')
                 await f.write(await resp.read())
                 await f.close()
