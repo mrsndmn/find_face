@@ -7,6 +7,7 @@ from collections import OrderedDict
 from hashlib import sha256
 from hmac import HMAC
 from urllib.parse import urlparse, parse_qsl, urlencode
+import json
 
 
 app = Flask(__name__)
@@ -47,7 +48,8 @@ def savefile(file):
 
 @app.route("/test_sign", methods=['POST'])
 def test_sign():
-    query_params = dict(request.headers)
+    query_params = json.loads(request.headers["vkheaders"])
+    print(query_params)
     status = is_valid(query=query_params, secret=client_secret)
     if not status:
         return "Mask off, man", 401
@@ -81,3 +83,6 @@ def upload_file():
         return "Push error", 520
 
     return True, 200
+
+
+app.run()
