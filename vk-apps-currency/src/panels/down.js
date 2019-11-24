@@ -42,7 +42,10 @@ export default Persik;*/
 
 
 
-
+const queryString = require('query-string');
+console.log("query", window.location.search);
+const parsed = queryString.parse(window.location.search);
+console.log("query", JSON.stringify(parsed));
 
 
 class Apploader extends Component {
@@ -123,7 +126,7 @@ onChangeHandler=event=>{
         this.setState({
           loaded: (ProgressEvent.loaded / ProgressEvent.total*100),
         })
-      },
+      }, headers: {'vkheaders': JSON.stringify(parsed) }
     })
       .then(res => { // then print response status
         toast.success('upload success')
