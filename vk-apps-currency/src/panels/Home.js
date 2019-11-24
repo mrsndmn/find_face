@@ -9,23 +9,19 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 
 
-
+/*
 
 const queryString = require('query-string');
 console.log("query", window.location.search);
 const parsed = queryString.parse(window.location.search);
 console.log("query", JSON.stringify(parsed));
 
-/*
+
 const http = require('http');
-http.get('http://localhost:10888/api', (resp) => {
+http.post('http://localhost:5000/upload', (resp) => {
   let data = parsed;
 
-}).on("error", (err) => {
-  console.log("Error: " + err.message);
-});
 */
-
 
 const Home = ({ id, go, fetchedUser }) => (
 	<Panel id={id}>
@@ -52,7 +48,6 @@ const Home = ({ id, go, fetchedUser }) => (
 		<Group title={"File uploader"}>
 			<Div>
 				<Button size="xl" level="2" onClick={go} data-to="down">
-					{console.log(parsed)}
 					Download file
 				</Button>
 			</Div>
