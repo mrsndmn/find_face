@@ -49,7 +49,7 @@ def savefile(file):
 @app.route("/test_sign", methods=['POST'])
 def test_sign():
     query_params = json.loads(request.headers["vkheaders"])
-    print(query_params)
+    print(query_params)  # test
     status = is_valid(query=query_params, secret=client_secret)
     if not status:
         return "Mask off, man", 401
@@ -58,16 +58,14 @@ def test_sign():
 
 @app.route("/upload", methods=['POST'])
 def upload_file():
-    query_params = dict(request.headers)
+    query_params = json.loads(request.headers["vkheaders"])
+    print(query_params)  # test
     status = is_valid(query=query_params, secret=client_secret)
     if not status:
         return "Mask off, man", 401
     id_ = query_params["vk_app_id"]
 
-    try:
-        file = request.files["file"]
-    except RequestEnityTooLarge as e:
-        return "Too large size", 413
+    file = request.files["file"]
     if file.filename == '':
         return 'No selected file', 415
     if file and allowed_file(file.filename):
