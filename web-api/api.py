@@ -15,7 +15,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 api = Api(app)
 UPLOAD_FOLDER = '/tmp/'
-ALLOWED_EXTENSIONS = set(['pnxg', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'JPEG', 'JPG'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16mb
 
@@ -61,7 +61,7 @@ def test_sign():
 @app.route("/upload", methods=['POST'])
 def upload_file():
     try:
-        query_params = json.loads(request.headers["vkheaders"]) #500 error todo try except
+        query_params = json.loads(request.headers["vkheaders"])
     except:
         return "Wrong headers", 400
     print(query_params)  # test
