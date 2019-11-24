@@ -8,15 +8,13 @@ import Home from './panels/Home';
 import Persik from './panels/Persik';
 import Down from './panels/down'
 
-
-const queryString = require('query-string');
-console.log("query", window.location.search);
-const parsed = queryString.parse(window.location.search);
-console.log("query", parsed);
-
 /*
+const queryString = require('query-string');
+const parsed = queryString.parse(window.location.search);
+
+
 const http = require('http');
-http.post('http://localhost:10888/test_sign', (resp) => {
+http.post('http://localhost:/upload', data = parsed => {
 	let data = parsed;
 });
 */
