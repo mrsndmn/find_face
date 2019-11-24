@@ -6,6 +6,18 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
 import Persik from './panels/Persik';
+import Down from './panels/down'
+
+/*
+const queryString = require('query-string');
+const parsed = queryString.parse(window.location.search);
+
+
+const http = require('http');
+http.post('http://localhost:/upload', data = parsed => {
+	let data = parsed;
+});
+*/
 
 const App = () => {
 
@@ -37,6 +49,7 @@ const App = () => {
 		<View activePanel={activePanel} popout={popout}>
 			<Home id='home' fetchedUser={fetchedUser} go={go} />
 			<Persik id='persik' go={go} />
+			<Down id = 'down' go = {go} />
 		</View>
 	);
 }
