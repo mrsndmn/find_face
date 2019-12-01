@@ -2,3 +2,5 @@
 .vscode
 uploads
 photos
+node_modules
+.idea

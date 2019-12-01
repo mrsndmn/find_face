@@ -1,5 +1,15 @@
 # Team 912
 
+```
+# run api
+PYTHONPATH=. python web-api/api.py
+
+
+# run front
+cd 
+```
+
+
 Проект по поиску друзей по фотке по курсу [Applied Python](https://github.com/Kinetikm/AppliedPythonF2019/).
 
 ---
