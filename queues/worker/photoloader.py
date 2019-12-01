@@ -34,11 +34,11 @@ async def get_friends_deeply(user_id):
         {'id': f.id, "photo_200": f.photo_200} for f in deep_friends if f.photo_200 is not None
     ]
 
-    await send_task("download_photo", args=(serialisable_deep_friends,))
+    await send_task("download_photo", args=(user_id, serialisable_deep_friends,))
     return deep_friends
 
 @manager.task()
-async def download_photo(friends_list):
+async def download_photo(user_id, friends_list):
     '''
     Ассинхронно обкачивает фотки пользователей
     Для того, чтобы добавить задачу для этого обработчика
@@ -61,10 +61,11 @@ async def download_photo(friends_list):
 
     print(f"downloaded {len(friends_list)} friends photo")
 
+    await send_task("recognozer", args=(user_id, friends_list))
     return
 
 @manager.task()
-async def recognozer(friends_list, target_photo):
+async def recognozer(user_id, friends_list, target_photo):
     '''
     Ищет схожие фотографии
     '''
@@ -78,6 +79,8 @@ async def recognozer(friends_list, target_photo):
 
         if comparator.check_faces(fname):
             recognozed.append(uid)
+
+
 
     return
 

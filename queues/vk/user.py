@@ -102,4 +102,13 @@ class VKUser:
 
         return result
 
+    def send_recognozed_notification(self, recognozed):
+        message = "Sorry, we dont know who is on your photo"
+
+        if len(recognozed) > 0:
+            message = "Found theese users: " + ", ".join([ f"@{u}" for u in recognozed ])
+
+        self.session.method("messages.send", {"user_id": self.id,
+                                              "message": message})
+
 # await download_all_friends(friends_list)
