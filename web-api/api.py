@@ -54,16 +54,6 @@ def savefile(file):
         return False
 
 
-@app.route("/test_sign", methods=['POST'])
-def test_sign():
-    query_params = json.loads(request.headers["vkheaders"])
-    print(query_params)  # test
-    status = is_valid(query=query_params, secret=client_secret)
-    if not status:
-        return "Mask off, man", 401
-    return "Hello", 202
-
-
 @app.route("/upload", methods=['POST'])
 def upload_file():
     try:
@@ -74,7 +64,6 @@ def upload_file():
     status = is_valid(query=query_params, secret=client_secret)
     if not status:
         return "Mask off, man", 401
-    id_ = query_params["vk_app_id"]
 
     file = request.files["file"]
     if file.filename == '':
