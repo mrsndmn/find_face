@@ -10,6 +10,7 @@ import aiotasks
 from queues.vk.user import VKUser
 from aiotasks import build_manager, send_task
 
+from mlmodel.face_recognizer import face_comparator, FacesError
 
 manager = build_manager(dsn="redis://localhost:6379")
 
@@ -59,6 +60,24 @@ async def download_photo(friends_list):
     await asyncio.gather(*async_tasks, return_exceptions=True)
 
     print(f"downloaded {len(friends_list)} friends photo")
+
+    return
+
+@manager.task()
+async def recognozer(friends_list, target_photo):
+    '''
+    Ищет схожие фотографии
+    '''
+
+    comparator = face_comparator(target_photo)
+
+    recognozed = []
+    for friend in friends_list:
+        uid = friend['id']
+        fname = f'photos/{uid}.jpg'
+
+        if comparator.check_faces(fname):
+            recognozed.append(uid)
 
     return
 
