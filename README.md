@@ -1,14 +1,48 @@
 # Team 912
 
+
+## installation
+
+dlib у меня получилось только с conda установить.
 ```
-# run api
+conda install -c conda-forge dlib
+```
+из-за этого и venv надо использовать из конда и устанавливать в него все зависимости
+```
+pip install -r web-api/requirements.txt
+pip install -r queues/requirements.txt
+```
+
+Запуск фронта
+Важно! В anaconda может быть протухшая nodejs. Используете системную
+```
+cd web-front
+npm install
+npm start
+```
+
+Запуск разгребальщиков и апишки
+```
+PYTHONPATH=. python -m aiotasks -d -vvv worker -A queues.worker.photoloader
 PYTHONPATH=. python web-api/api.py
-
-
-# run front
-cd 
 ```
 
+Класс VKUser
+* MAX_FRIENDS_COUNT = 5 -- максимальное кол-во друзей, которые обкачиваются среди друзей. Слишком большое нельзя поставить, потому что можно напороться на рейтлимиты вк. Чем значение больше, тем дольше будет обрабатываться запрос
+
+
+# переменные окружения
+```
+export VKAPPS_TOKEN=        # сервисный токен прлиожения для запросов в апишку вк
+export VKAPPS_SECRET_KEY=   # секретный ключ приложения для проверки авторизации пользователя
+export VK_COMMUNITY_TOKEN=  # токен сообщества, от которого будут отправляться сообщения
+```
+
+# todo
+* ассинхрон на походы в вк
+Ассинхронная только загрузка фоток. Походы в апишку вк не асиинзронные, но зато они обрабатываюстя батчами (это позволяет интерфейс апиши)
+
+---
 
 Проект по поиску друзей по фотке по курсу [Applied Python](https://github.com/Kinetikm/AppliedPythonF2019/).
 

@@ -23,7 +23,7 @@ export VKAPPS_TOKEN=****
 docker run -p 6379:6379 redis
 
 # запустить разгребальщик
-PYTHONPATH=.:../aiotasks python -m aiotasks -d -vvv worker -A queues.worker.photoloader
+PYTHONPATH=. python -m aiotasks -d -vvv worker -A queues.worker.photoloader
 # добавить задание в очередь
-PYTHONPATH=.:../aiotasks python queues/worker/photoloader.py
+PYTHONPATH=. python queues/worker/photoloader.py
 ```
