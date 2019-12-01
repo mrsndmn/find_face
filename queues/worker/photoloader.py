@@ -26,19 +26,19 @@ async def download_image_to_file(url, fname):
                 print(f"{fname} was uploaded")
 
 @manager.task()
-async def get_friends_deeply(user_id):
+async def get_friends_deeply(user_id, target_photo):
     print("got user:", user_id)
     deep_friends = VKUser(user_id).get_friends_deep()
 
     serialisable_deep_friends = [
-        {'id': f.id, "photo_200": f.photo_200} for f in deep_friends if f.photo_200 is not None
+        {'id': f.id, "photo_200": f.photo_200, "first_name": f.first_name} for f in deep_friends if f.photo_200 is not None
     ]
 
-    await send_task("download_photo", args=(user_id, serialisable_deep_friends,))
+    await send_task("download_photo", args=(user_id, serialisable_deep_friends, target_photo,))
     return deep_friends
 
 @manager.task()
-async def download_photo(user_id, friends_list):
+async def download_photo(user_id, friends_list, target_photo):
     '''
     Ассинхронно обкачивает фотки пользователей
     Для того, чтобы добавить задачу для этого обработчика
@@ -61,7 +61,7 @@ async def download_photo(user_id, friends_list):
 
     print(f"downloaded {len(friends_list)} friends photo")
 
-    await send_task("recognozer", args=(user_id, friends_list))
+    await send_task("recognozer", args=(user_id, friends_list, target_photo))
     return
 
 @manager.task()
@@ -70,17 +70,30 @@ async def recognozer(user_id, friends_list, target_photo):
     Ищет схожие фотографии
     '''
 
-    comparator = face_comparator(target_photo)
+    print("in recognizer:", user_id, friends_list, target_photo)
+    try:
+        comparator = face_comparator(target_photo)
+    except Exception as e:
+        print("exception during recognizing:", e)
+        return
 
     recognozed = []
     for friend in friends_list:
         uid = friend['id']
         fname = f'photos/{uid}.jpg'
+        try:
+            print("checking:", fname)
+            if comparator.check_faces(fname):
+                recognozed.append(friend)
+        except Exception as e:
+            print("exception during checking face:", e)
 
-        if comparator.check_faces(fname):
-            recognozed.append(uid)
+    print("recognized:", recognozed)
 
-
+    try:
+        VKUser(user_id).send_recognozed_notification(recognozed)
+    except Exception as e:
+        print("cant send mesasge:", e)
 
     return
 

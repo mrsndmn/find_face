@@ -79,6 +79,7 @@ def upload_file():
     file = request.files["file"]
     if file.filename == '':
         return 'No selected file', 415
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         if not savefile(file):
@@ -88,7 +89,7 @@ def upload_file():
 
     try:
         manager.loop.run_until_complete(
-                send_task("get_friends_deeply", args=(query_params["vk_user_id"],)))
+                send_task("get_friends_deeply", args=(query_params["vk_user_id"], "uploads/" + filename)))
     except:
         return "Push error", 520
 

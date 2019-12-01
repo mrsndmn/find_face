@@ -4,6 +4,7 @@ import copy
 import logging
 import sys
 import os
+import random
 
 vk_users_db = dict()
 
@@ -14,12 +15,14 @@ class VKUser:
     '''
 
     session = vk_api.VkApi(token=os.environ['VKAPPS_TOKEN'])
+    community_session = vk_api.VkApi(token=os.environ['VK_COMMUNITY_TOKEN'])
     MAX_FRIENDS_COUNT = 5
 
-    def __init__(self, vkid, photo_200=None, is_private=False):
+    def __init__(self, vkid, photo_200=None, is_private=False, first_name=None):
         self.id = vkid
         self.friends = []
         self.photo_200 = photo_200
+        self.first_name = first_name
         self.is_private = False
 
         if self.id in vk_users_db:
@@ -37,7 +40,7 @@ class VKUser:
 
     @classmethod
     def from_vk_object(self, vk_user_obj):
-        return VKUser(vk_user_obj['id'], photo_200=vk_user_obj.get('photo_200'))
+        return VKUser(vk_user_obj['id'], photo_200=vk_user_obj.get('photo_200'), first_name=vk_user_obj.get("first_name"))
 
     def saved_in_db(self):
         return self.id in vk_users_db
@@ -106,9 +109,10 @@ class VKUser:
         message = "Sorry, we dont know who is on your photo"
 
         if len(recognozed) > 0:
-            message = "Found theese users: " + ", ".join([ f"@{u}" for u in recognozed ])
+            message = "Found theese users: " + ", ".join([ f"@id{u['id']} ({u['first_name']})" for u in recognozed ])
 
-        self.session.method("messages.send", {"user_id": self.id,
-                                              "message": message})
+        self.community_session.method("messages.send", {"user_id": self.id,
+                                              "message": message,
+                                              "random_id": random.random()}) # todo make real random
 
 # await download_all_friends(friends_list)
