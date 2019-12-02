@@ -77,9 +77,15 @@ async def recognozer(user_id, friends_list, target_photo):
         print("exception during recognizing:", e)
         return
 
+    already_recognized = set()
     recognozed = []
     for friend in friends_list:
         uid = friend['id']
+        if uid in already_recognized:
+            continue
+
+        already_recognized.add(uid)
+
         fname = f'photos/{uid}.jpg'
         try:
             print("checking:", fname)

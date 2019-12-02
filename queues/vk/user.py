@@ -16,7 +16,7 @@ class VKUser:
 
     session = vk_api.VkApi(token=os.environ['VKAPPS_TOKEN'])
     community_session = vk_api.VkApi(token=os.environ['VK_COMMUNITY_TOKEN'])
-    MAX_FRIENDS_COUNT = 100
+    MAX_FRIENDS_COUNT = 10
 
     def __init__(self, vkid, photo_200=None, is_private=False, first_name=None):
         self.id = vkid
